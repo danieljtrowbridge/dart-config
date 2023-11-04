@@ -1,0 +1,16 @@
+---
+
+name: Run yamllint
+
+on:
+  pull_request:
+    branches:
+      - main
+  push:
+    branches:
+      - main
+
+jobs:
+  yamllint:
+    name: Run yamllint
+    uses: danieljtrowbridge/meta-config/.github/workflows/yamllint.yaml@main
