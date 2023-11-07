@@ -5,6 +5,10 @@ name: CI
 on:
   workflow_call:
     inputs:
+      build-apk:
+        default: false
+        required: false
+        type: boolean
       build-ios:
         default: false
         required: false
@@ -31,15 +35,18 @@ jobs:
         run: dart analyze --fatal-infos
       - name: Test
         run: flutter test
-      - name: Set up Java
+      - if: inputs.build-apk
+        name: Set up Java
         uses: actions/setup-java@v3
         with:
           cache: gradle
           distribution: corretto
           java-version: "11"
-      - name: Build APK
+      - if: inputs.build-apk
+        name: Build APK
         run: flutter build apk
-      - name: Upload APK artifact
+      - if: inputs.build-apk
+        name: Upload APK artifact
         uses: actions/upload-artifact@v3
         with:
           name: apk
