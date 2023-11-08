@@ -25,6 +25,10 @@ on:
 jobs:
   ci:
     name: CI
+    permissions:
+      actions: read
+      checks: write
+      contents: read
     runs-on: ubuntu-latest
     steps:
       - name: Set up Flutter
@@ -46,12 +50,20 @@ jobs:
         run: dart analyze --fatal-infos
       - name: Test
         run: flutter test
-      - if: failure() || success()
-        name: Upload test report
+      - if: inputs.report
+        name: Upload test report artifact
         uses: actions/upload-artifact@v3
         with:
           name: tests
           path: reports/tests.json
+      - if: inputs.report
+        name: Report test results
+        uses: dorny/test-reporter@v1
+        with:
+          artifact: tests
+          name: Tests
+          path: reports/tests.json
+          reporter: flutter-json
       - if: inputs.build-apk
         name: Set up Java
         uses: actions/setup-java@v3
@@ -92,21 +104,3 @@ jobs:
         with:
           name: ios-app
           path: build/ios/iphoneos/Runner.app
-  report:
-    if: inputs.report
-    name: Report test results
-    needs:
-      - ci
-    permissions:
-      actions: read
-      checks: write
-      contents: read
-    runs-on: ubuntu-latest
-    steps:
-      - name: Report test results
-        uses: dorny/test-reporter@v1
-        with:
-          artifact: tests
-          name: Tests
-          path: reports/tests.json
-          reporter: flutter-json
