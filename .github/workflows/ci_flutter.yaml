@@ -42,7 +42,7 @@ jobs:
       - name: Install dependencies
         run: flutter pub get
       - name: Check code formatting
-        run: dart format -o show --set-exit-if-changed .
+        run: dart format --set-exit-if-changed .
       - if: inputs.build-runner
         name: Run `build_runner`
         run: dart run build_runner build
