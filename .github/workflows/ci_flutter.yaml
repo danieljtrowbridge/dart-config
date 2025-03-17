@@ -58,7 +58,7 @@ jobs:
           path: reports/tests.json
       - if: inputs.report
         name: Report test results
-        uses: dorny/test-reporter@v1
+        uses: dorny/test-reporter@v2
         with:
           artifact: tests
           name: Tests
